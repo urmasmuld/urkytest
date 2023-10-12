@@ -18,6 +18,10 @@ jobs:
             echo "GH_TOKEN: ${{ secrets.GH_TOKEN }}"
             echo "GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}"
 
+      - name: Debug Semantic Release Output
+        run: |
+            npx semantic-release --debug
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
