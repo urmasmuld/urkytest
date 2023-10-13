@@ -73,20 +73,17 @@ jobs:
           RELEASE_ID=$(echo "$response" | jq -r '.id')
 
           # Mark the release as a prerelease
-          if [[ $TAG == "v0."* ]]; then
-            curl -X PATCH "https://api.github.com/repos/${{ github.repository }}/releases/${RELEASE_ID}" \
-              -H "Authorization: token $GITHUB_TOKEN" \
-              -d "{
-                \"prerelease\": true
-              }"
+          if [[ $TITLE == "Release 0."* ]]; then
+            echo "::set-output name=prerel::true"
           else
-            curl -X PATCH "https://api.github.com/repos/${{ github.repository }}/releases/${RELEASE_ID}" \
-              -H "Authorization: token $GITHUB_TOKEN" \
-              -d "{
-                \"prerelease\": false
-              }"
+            echo "::set-output name=prerel::false"
           fi
 
+          curl -X PATCH "https://api.github.com/repos/${{ github.repository }}/releases/${RELEASE_ID}" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -d "{
+              \"prerelease\": $PREREL
+            }"
 
           # Commit and push the updated package.json
           git config user.name "${GITHUB_ACTOR}"
