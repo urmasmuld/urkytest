@@ -73,16 +73,17 @@ jobs:
           RELEASE_ID=$(echo "$response" | jq -r '.id')
 
           # Mark the release as a prerelease
-          if [[ $TITLE == "Release 0."* ]]; then
-            echo "::set-output name=prerel::true"
+          # Check if $TAG starts with "0."
+          if [[ $TAG == 0.* ]]; then
+            PRERELEASE=true
           else
-            echo "::set-output name=prerel::false"
+            PRERELEASE=false
           fi
 
           curl -X PATCH "https://api.github.com/repos/${{ github.repository }}/releases/${RELEASE_ID}" \
             -H "Authorization: token $GITHUB_TOKEN" \
             -d "{
-              \"prerelease\": \"${PREREL}\"
+              \"prerelease\": $PRERELEASE
             }"
 
           # Commit and push the updated package.json
