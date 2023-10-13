@@ -72,7 +72,7 @@ jobs:
           # Extract the release ID from the API response
           RELEASE_ID=$(echo "$response" | jq -r '.id')
 
-          if [[ $TAG == "0."* ]]; then
+          if [[ $TAG == "v0."* ]]; then
             echo "::set-output name=prerel::true"
           else
             echo "::set-output name=prerel::false"
